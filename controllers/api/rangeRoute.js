@@ -1,38 +1,36 @@
-const router = require('express').Router();
-const { Workout } = require('../../models');
 
-router.post('/', async (req, res) => {
-  try {
-    const newWorkout = await Workout.create({
-      ...req.body,
-      user_id: req.session.user_id,
+const router = require("express").Router();
+const Workout = require("../models/workout.js");
+
+router.post("/api/workout", ({ body }, res) => {
+  Workout.create(body)
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
     });
-
-    res.status(200).json(newWorkout);
-  } catch (err) {
-    res.status(400).json(err);
-  }
 });
 
-router.delete('/:id', async (req, res) => {
-  try {
-    const workoutData = await Workout.destroy({
-      where: {
-        id: req.params.id,
-        day: req.session.day,
-        exercise: req.session.exercise 
-      },
+router.post("/api/workout/bulk", ({ body }, res) => {
+  Workout.insertMany(body)
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
     });
+});
 
-    if (!workoutData) {
-      res.status(404).json({ message: 'No workout found with this id!' });
-      return;
-    }
-
-    res.status(200).json(workoutData);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+router.get("/api/workout", (req, res) => {
+  Workout.find({})
+    .sort({ date: -1 })
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
 });
 
 module.exports = router;
