@@ -3,7 +3,7 @@ const Workout = require("../models/workouts.js");
 
 
 
-router.get("/api/workouts", (req, res) => {
+router.get("/api/workouts/exercise", (req, res) => {
   Workout.find({})
     .sort({ day: -1 }).limit(1)
     .then(dbWorkout => {
