@@ -24,8 +24,3 @@ app.use(require("./routes/api.js"));
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
 });
-
-
-// function(req, res) {
-//   console.log('Request Type:', req.method);
-// })
